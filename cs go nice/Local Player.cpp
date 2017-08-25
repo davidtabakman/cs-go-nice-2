@@ -46,3 +46,15 @@ int LocalPlayer::CurrentWeapon(){
 void LocalPlayer::setFlashMaxAlpha(float a){
 	Mem.WriteToMemory<float>(PlayerBase + m_flFlashMaxAlpha, a);
 }
+
+float LocalPlayer::getX(){
+	return Mem.ReadFromMemory<float>(PlayerBase + m_vecOrigin);
+}
+
+float LocalPlayer::getY(){
+	return Mem.ReadFromMemory<float>(PlayerBase + m_vecOrigin + 0x4);
+}
+
+float LocalPlayer::getZ(){
+	return Mem.ReadFromMemory<float>(PlayerBase + m_vecOrigin + 0x8);
+}

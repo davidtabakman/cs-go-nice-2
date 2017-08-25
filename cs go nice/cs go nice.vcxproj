@@ -64,7 +64,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Aimbot.cpp" />
     <ClCompile Include="Bunnyhop.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Glow.cpp" />
     <ClCompile Include="Local Player.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -73,8 +75,10 @@
     <ClCompile Include="Triggerbot.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Aimbot.h" />
     <ClInclude Include="Bunnyhop.h" />
     <ClInclude Include="Control.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Glow.h" />
     <ClInclude Include="Local Player.h" />
     <ClInclude Include="Main.h" />

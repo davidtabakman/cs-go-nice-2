@@ -24,6 +24,9 @@ public:
 	virtual int Team();
 	virtual int CurrentWeapon();
 	virtual void setFlashMaxAlpha(float a);
+	float getX();
+	float getY();
+	float getZ();
 	
 };
 

@@ -3,14 +3,16 @@
 #include <windows.h>
 #include <TlHelp32.h>
 
+typedef float matrix4x4_t[4][4];
 
 class ProcessManager{
 protected:
 	DWORD dwProcessID, dwProtection, dwCaveAddress;
-	HANDLE handleToProcess;
+	
 
 public:
 	DWORD dwClient, dwEngine;
+	HANDLE handleToProcess;
 
 	ProcessManager();
 	~ProcessManager();

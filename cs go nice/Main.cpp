@@ -6,6 +6,11 @@
 #include "Main.h"
 #include <thread>
 
+#include "glm-master\glm\vec3.hpp"
+#include "glm-master\glm\vec4.hpp"
+#include "glm-master\glm\matrix.hpp"
+
+
 //Run functions for threads (in case I wanna run some kind of a setup aswell)
 //--------------------------------------------------------------------------
 void runBH(){
@@ -27,6 +32,15 @@ void runGlow(){
 //---------------------------------------------------------------------------
 
 
+glm::vec3 ExtractCameraPos_NoScale(const glm::mat4 & a_modelView)
+{
+	glm::mat3 rotMat(a_modelView);
+	glm::vec3 d(a_modelView[3]);
+
+	glm::vec3 retVec = -d * rotMat;
+	return retVec;
+}
+
 int main(){
 
 	//If csgo is running, get its handle
@@ -38,6 +52,7 @@ int main(){
 		Mem.dwEngine = Mem.GetModulePointer("engine.dll");
 		std::cout << "modules found \n\n";
 		
+		
 		//Hard coded controls because I was lazy
 		player.setup(Mem.dwClient);
 		std::cout << "TB key: HOME \n";
@@ -46,6 +61,7 @@ int main(){
 		std::cout << "NF key: F6 \n";
 		std::cout << "EXIT key: END \n\n";
 
+		entityManager.fillEntityList();
 		//Bunnyhop thread
 		std::thread BH(runBH);
 		BH.detach();
@@ -64,7 +80,9 @@ int main(){
 
 		//Check if the exit button is pressed, Sleep(2) so it won't take too much resources
 		while (!GetAsyncKeyState(keyBinds.quit)){
-			Sleep(5);
+			aimbot.run(entityManager);
+			
+			Sleep(2);
 		}
 
 		//Exit
