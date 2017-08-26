@@ -5,6 +5,7 @@
 #include <TlHelp32.h>
 #include "offsets.h"
 #include "Process Control.h"
+#include "Control.h"
 
 extern ProcessManager Mem;
 
@@ -24,6 +25,7 @@ public:
 	virtual int Team();
 	virtual int CurrentWeapon();
 	virtual void setFlashMaxAlpha(float a);
+	vec3 getEyePos();
 	float getX();
 	float getY();
 	float getZ();

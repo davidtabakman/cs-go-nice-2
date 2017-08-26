@@ -4,6 +4,7 @@
 #include "Process Control.h"
 #include "offsets.h"
 #include "Local Player.h"
+#include "Control.h"
 
 extern ProcessManager Mem;
 extern LocalPlayer player;
@@ -16,11 +17,14 @@ public:
 	float getEntityX(int entityIndex);
 	float getEntityY(int entityIndex);
 	float getEntityZ(int entityIndex);
+	bool isDormant(int entityIndex);
 	int getEntityHealth(int entityIndex);
+	vec3 getEntityBoneVec(int entityIndex, int boneID);
+	int EntityNum;
 private:
 	
 	DWORD EntityList[32];
-	int EntityNum;
+	
 };
 
 static EntityManager entityManager;

@@ -24,7 +24,8 @@ void Noflash::run(){
 			Sleep(200);
 		}
 		//-----------------------------------------------
-		player.setFlashMaxAlpha(percentage);
+		//player.setFlashMaxAlpha(percentage);
+		Sleep(50);
 	}
 }
 

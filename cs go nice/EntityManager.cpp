@@ -28,18 +28,38 @@ void EntityManager::fillEntityList(){
 	}
 }
 
+int EntityManager::getEntityHealth(int entityIndex){
+	return Mem.ReadFromMemory<int>(EntityList[entityIndex] + m_iHealth);
+}
+
 float EntityManager::getEntityX(int entityIndex){
-	return Mem.ReadFromMemory<float>(EntityList[entityIndex] + m_vecOrigin);
+DWORD dwBoneBase = Mem.ReadFromMemory<DWORD>(EntityList[entityIndex] + m_dwBoneMatrix);
+
+return Mem.ReadFromMemory<float>(dwBoneBase + 0x30 * 7 + 0xC);
+
 }
 
 float EntityManager::getEntityY(int entityIndex){
-	return Mem.ReadFromMemory<float>(EntityList[entityIndex] + m_vecOrigin + 0x4);
+DWORD dwBoneBase = Mem.ReadFromMemory<DWORD>(EntityList[entityIndex] + m_dwBoneMatrix);
+
+return Mem.ReadFromMemory<float>(dwBoneBase + 0x30 * 7 + 0x1C);
 }
 
 float EntityManager::getEntityZ(int entityIndex){
-	return Mem.ReadFromMemory<float>(EntityList[entityIndex] + m_vecOrigin + 0x8);
+	DWORD dwBoneBase = Mem.ReadFromMemory<DWORD>(EntityList[entityIndex] + m_dwBoneMatrix);
+
+	return Mem.ReadFromMemory<float>(dwBoneBase + 0x30 * 7 + 0x2C);
 }
 
-int EntityManager::getEntityHealth(int entityIndex){
-	return Mem.ReadFromMemory<int>(EntityList[entityIndex] + m_iHealth);
+vec3 EntityManager::getEntityBoneVec(int entityIndex, int boneID){
+	DWORD dwBoneBase = Mem.ReadFromMemory<DWORD>(EntityList[entityIndex] + m_dwBoneMatrix);
+	vec3 coords;
+	coords.x = Mem.ReadFromMemory<float>(dwBoneBase + boneID * 0x30 + 0xC);
+	coords.y = Mem.ReadFromMemory<float>(dwBoneBase + boneID * 0x30 + 0x1C);
+	coords.z = Mem.ReadFromMemory<float>(dwBoneBase + boneID * 0x30 + 0x2C);
+	return coords;
+}
+
+bool EntityManager::isDormant(int entityIndex){
+	return Mem.ReadFromMemory<bool>(EntityList[entityIndex] + dwDormant);
 }

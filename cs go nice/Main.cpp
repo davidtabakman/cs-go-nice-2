@@ -29,6 +29,10 @@ void runNF(){
 void runGlow(){
 	glow.run();
 }
+
+void runAimbot(){
+	aimbot.run(entityManager);
+}
 //---------------------------------------------------------------------------
 
 
@@ -59,6 +63,7 @@ int main(){
 		std::cout << "GLOW key: INSERT \n";
 		std::cout << "BH key: DELETE \n";
 		std::cout << "NF key: F6 \n";
+		std::cout << "AB key: F7 \n";
 		std::cout << "EXIT key: END \n\n";
 
 		entityManager.fillEntityList();
@@ -78,11 +83,12 @@ int main(){
 		std::thread Glow(runGlow);
 		Glow.detach();
 
+		std::thread Aimbot(runAimbot);
+		Aimbot.detach();
+
 		//Check if the exit button is pressed, Sleep(2) so it won't take too much resources
 		while (!GetAsyncKeyState(keyBinds.quit)){
-			aimbot.run(entityManager);
-			
-			Sleep(2);
+			Sleep(10);
 		}
 
 		//Exit

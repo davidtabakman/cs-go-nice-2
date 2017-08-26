@@ -8,8 +8,7 @@
 #include "Local Player.h"
 #include "EntityManager.h"
 
-typedef struct vec3{ float x; float y; float z; };
-typedef struct angle{ float pitch; float yaw; float row; };
+
 
 extern LocalPlayer player;
 
@@ -22,8 +21,9 @@ private:
 	vec3 me;
 	vec3 enemy;
 	angle newAngle;
+	float soomthener = 10;
 	virtual void setup();
-	virtual angle CalcAng(vec3 me, vec3 enemy, angle result, int fFlags);
+	virtual angle CalcAng(vec3 me, vec3 enemy, int fFlags);
 };
 
 #endif /* AIMBOT_H */

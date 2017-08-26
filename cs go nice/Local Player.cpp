@@ -58,3 +58,12 @@ float LocalPlayer::getY(){
 float LocalPlayer::getZ(){
 	return Mem.ReadFromMemory<float>(PlayerBase + m_vecOrigin + 0x8);
 }
+
+vec3 LocalPlayer::getEyePos(){
+	vec3 vecOrigin = Mem.ReadFromMemory<vec3>(PlayerBase + m_vecOrigin);
+	vec3 vecViewOffset = Mem.ReadFromMemory<vec3>(PlayerBase + m_vecViewOffset);
+	vecOrigin.x += vecViewOffset.x;
+	vecOrigin.y += vecViewOffset.y;
+	vecOrigin.z += vecViewOffset.z;
+	return vecOrigin;
+}
