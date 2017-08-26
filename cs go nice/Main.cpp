@@ -88,7 +88,8 @@ int main(){
 
 		//Check if the exit button is pressed, Sleep(2) so it won't take too much resources
 		while (!GetAsyncKeyState(keyBinds.quit)){
-			Sleep(10);
+			entityManager.fillEntityList();
+			Sleep(50);
 		}
 
 		//Exit

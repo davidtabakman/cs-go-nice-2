@@ -12,6 +12,7 @@ void EntityManager::fillEntityList(){
 
 	int CurrentTeam;
 	DWORD CurrentEntity;
+	EntityNum = 0;
 
 	for (int i = 0; i < 64; i++){
 		CurrentEntity = Mem.ReadFromMemory<DWORD>(Mem.dwClient + dwEntityList + EntLoopDist*i);

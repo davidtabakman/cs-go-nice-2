@@ -43,6 +43,9 @@ Triggerbot::~Triggerbot(){
 void Triggerbot::run(){
 	//Soon I'll change the triggerbot delay to work based on ammo
 	int delayWork = delayInMillis;
+	bool firstShot = true;
+	bool firstRelease = false;
+	//RCS
 	while (true){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.triggerBot)){
@@ -61,13 +64,25 @@ void Triggerbot::run(){
 			int EnemyTeam = Mem.ReadFromMemory<int>(EnemyInCH + m_iTeamNum);
 
 			if (EnemyTeam != player.Team() && EnemyTeam > 1 && EnemyTeam <= 3 && player.CrosshairID() <= 32 && !GetAsyncKeyState(VK_LBUTTON)){
-				Sleep(delayWork);
-				mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, XBUTTON1, 0);
-				Sleep(10);
-				mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, XBUTTON1, 0);
-				Sleep(10);
-				delayWork = 1;
+				if (firstShot){
+					Mem.WriteToMemory<bool>(Mem.dwClient + dwForceAttack, true);
+					Sleep(10);
+				}
+				firstRelease = true;
+				firstShot = false;
+				
+				
 			}
+			else
+			{
+				if (firstRelease){
+					Mem.WriteToMemory<bool>(Mem.dwClient + dwForceAttack, false);
+					Sleep(10);
+				}
+				firstShot = true;
+				firstRelease = false;
+			}
+
 			Sleep(1);
 		}
 	}

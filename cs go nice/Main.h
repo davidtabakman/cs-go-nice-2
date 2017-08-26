@@ -11,7 +11,9 @@
 #include "Noflash.h"
 #include "EntityManager.h"
 #include "Aimbot.h"
+#include "RCS.h"
 
+RCS rcs;
 Aimbot aimbot;
 ProcessManager Mem;
 LocalPlayer player;

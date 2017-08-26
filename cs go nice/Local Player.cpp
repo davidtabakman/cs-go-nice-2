@@ -67,3 +67,21 @@ vec3 LocalPlayer::getEyePos(){
 	vecOrigin.z += vecViewOffset.z;
 	return vecOrigin;
 }
+
+int LocalPlayer::getShotsFired(){
+	return Mem.ReadFromMemory<int>(PlayerBase + m_iShotsFired);
+}
+
+angle LocalPlayer::getAimPunch(){
+	return Mem.ReadFromMemory<angle>(PlayerBase + m_aimPunchAngle);
+}
+
+void LocalPlayer::setAng(angle a){
+	DWORD AngPtr = Mem.ReadFromMemory<DWORD>(Mem.dwEngine + dwClientState);
+	Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, a);
+}
+
+angle LocalPlayer::getAng(){
+	DWORD AngPtr = Mem.ReadFromMemory<DWORD>(Mem.dwEngine + dwClientState);
+	return Mem.ReadFromMemory<angle>(AngPtr + dwClientState_ViewAngles);
+}

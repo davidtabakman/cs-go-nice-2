@@ -6,6 +6,7 @@
 #include "Process Control.h"
 #include <windows.h>
 #include <TlHelp32.h>
+#include "RCS.h"
 
 struct EntityList{
 	int i_Enemies[32];

@@ -72,6 +72,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Noflash.cpp" />
     <ClCompile Include="Process Control.cpp" />
+    <ClCompile Include="RCS.cpp" />
     <ClCompile Include="Triggerbot.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +86,7 @@
     <ClInclude Include="Noflash.h" />
     <ClInclude Include="offsets.h" />
     <ClInclude Include="Process Control.h" />
+    <ClInclude Include="RCS.h" />
     <ClInclude Include="Triggerbot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,10 +7,12 @@
 #include "Control.h"
 #include "Local Player.h"
 #include "EntityManager.h"
-
+#include "RCS.h"
 
 
 extern LocalPlayer player;
+
+extern RCS rcs;
 
 class Aimbot {
 public:

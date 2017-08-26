@@ -101,11 +101,14 @@ void Aimbot::run(EntityManager entityManager){
 	while (true){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.aimbot)){
+			
 			int i = closestEntityIndex(entityManager);
 			if (i != -1){
 				me = player.getEyePos(); enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
 				
-					angle myAngle = Mem.ReadFromMemory<angle>(AngPtr + dwClientState_ViewAngles);
+					//angle myAngle = Mem.ReadFromMemory<angle>(AngPtr + dwClientState_ViewAngles);
+					angle myAngle = rcs.getNormal();
+
 					newAngle = CalcAng(me, enemy, 0);
 					angle betweenAngle;
 					if (myAngle.yaw > 0.0f && newAngle.yaw < 0.0f){
@@ -128,7 +131,8 @@ void Aimbot::run(EntityManager entityManager){
 							newAngle = angAdd(myAngle, betweenAngle);
 
 							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+							newAngle = rcs.run(newAngle);
+							player.setAng(newAngle);
 						}
 					}
 					else if (newAngle.yaw < 0.0f && myAngle.yaw < 0.0f){
@@ -149,7 +153,11 @@ void Aimbot::run(EntityManager entityManager){
 							newAngle = angAdd(myAngle, betweenAngle);
 
 							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+							
+							
+							newAngle = rcs.run(newAngle);
+						
+							player.setAng(newAngle);
 						}
 					}			
 					else {
@@ -165,9 +173,11 @@ void Aimbot::run(EntityManager entityManager){
 							newAngle = angAdd(myAngle, betweenAngle);
 
 							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+							newAngle = rcs.run(newAngle);
+							player.setAng(newAngle);
 						}
 					}
+					
 					
 					
 					

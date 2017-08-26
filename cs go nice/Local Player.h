@@ -25,10 +25,14 @@ public:
 	virtual int Team();
 	virtual int CurrentWeapon();
 	virtual void setFlashMaxAlpha(float a);
+	int getShotsFired();
+	angle getAimPunch();
 	vec3 getEyePos();
 	float getX();
 	float getY();
 	float getZ();
+	angle getAng();
+	void setAng(angle a);
 	
 };
 
