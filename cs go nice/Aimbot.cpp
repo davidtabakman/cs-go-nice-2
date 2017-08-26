@@ -115,14 +115,21 @@ void Aimbot::run(EntityManager entityManager){
 							betweenAngle = angSub(newAngle, myAngle);
 							newAngle.yaw -= 360.0f;
 						}
-						betweenAngle = angDiv(betweenAngle, soomthener);
+						
 
 						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
 							betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
 						}
 						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
 							std::cout << "banned";
-						newAngle = angAdd(myAngle, betweenAngle);
+
+						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
+							betweenAngle = angDiv(betweenAngle, soomthener);
+							newAngle = angAdd(myAngle, betweenAngle);
+
+							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
+							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+						}
 					}
 					else if (newAngle.yaw < 0.0f && myAngle.yaw < 0.0f){
 						newAngle.yaw += 360.0f;
@@ -136,8 +143,14 @@ void Aimbot::run(EntityManager entityManager){
 						}
 						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
 							std::cout << "banned";
-						betweenAngle = angDiv(betweenAngle, soomthener);
-						newAngle = angAdd(myAngle, betweenAngle);
+
+						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
+							betweenAngle = angDiv(betweenAngle, soomthener);
+							newAngle = angAdd(myAngle, betweenAngle);
+
+							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
+							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+						}
 					}			
 					else {
 						betweenAngle = angSub(newAngle, myAngle);
@@ -147,18 +160,17 @@ void Aimbot::run(EntityManager entityManager){
 						}
 						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
 							std::cout << "banned";
-						betweenAngle = angDiv(betweenAngle, soomthener);
-						newAngle = angAdd(myAngle, betweenAngle);
+						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
+							betweenAngle = angDiv(betweenAngle, soomthener);
+							newAngle = angAdd(myAngle, betweenAngle);
+
+							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
+							Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+						}
 					}
 					
 					
-					newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-					//newAngle.yaw = clampFloat(newAngle.yaw, -179.0f, 179.0f);
-
-					//if (newAngle.yaw >=179.0f){
-						//newAngle.yaw = -178.0f;
-					//}
-					Mem.WriteToMemory<angle>(AngPtr + dwClientState_ViewAngles, newAngle);
+					
 			
 			}
 		}

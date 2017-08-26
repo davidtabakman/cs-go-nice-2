@@ -21,7 +21,8 @@ private:
 	vec3 me;
 	vec3 enemy;
 	angle newAngle;
-	float soomthener = 10;
+	float soomthener = 5;
+	float fovDeg = 4;
 	virtual void setup();
 	virtual angle CalcAng(vec3 me, vec3 enemy, int fFlags);
 };
