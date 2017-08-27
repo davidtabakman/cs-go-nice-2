@@ -104,10 +104,14 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 	lowestAngle.pitch = 999999999.f;
 	float minDist = 999999999.f, dist;
 	for (int i = 0; i < entityManager.EntityNum; i++){
-		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i)){
+		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i) && entityManager.isSpotted(i)){
 			enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
 
 			myAngle = rcs.getNormal();
+
+			if (player.getShotsFired() >= 3){
+				std::cout << "";
+			}
 
 			newAngle = CalcAng(me, enemy, 0);
 			betweenAngle;
@@ -172,15 +176,22 @@ void Aimbot::run(EntityManager entityManager){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.aimbot)){
 			
-			//int i = closestEntityIndex(entityManager);
-			//if (i != -1){
 
-				newAngle = closestEntityToCrosshair(entityManager, newAngle);
-				if (newAngle.pitch != 999999999.f){
-					newAngle = rcs.run(newAngle);
-					player.setAng(newAngle);
+			newAngle = closestEntityToCrosshair(entityManager, newAngle);
+			if (newAngle.pitch != 999999999.f){
+				angle testAngle = newAngle;
+				newAngle = rcs.run(newAngle);
+				if (newAngle.pitch < -0.2){
+					std::cout << "wtf";
 				}
-			//}
+			
+				player.setAng(newAngle);
+			}
+			else {
+				rcs.reset();
+			}
+			//newAngle = rcs.run(newAngle);
+			
 		}
 		Sleep(2);
 	}

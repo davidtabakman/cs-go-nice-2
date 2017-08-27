@@ -11,15 +11,9 @@ RCS::~RCS(){
 angle RCS::run(angle originalAngle){
 	if (Mem.ReadFromMemory<bool>(Mem.dwClient + dwForceAttack)){
 		shotsFired = Mem.ReadFromMemory<int>(player.Base() + m_iShotsFired);
-		if (shotsFired > 1){
-			originalAngle = player.getAng();
+		if (shotsFired >= 1){
 
 			angle m_PunchAngle = player.getAimPunch();
-
-			originalAngle.pitch = originalAngle.pitch + oldAngle.pitch;
-			originalAngle.yaw = originalAngle.yaw + oldAngle.yaw;
-
-			// Add the old "viewpunch" so we get the "center" of the screen again
 
 			newAngle.pitch = originalAngle.pitch - m_PunchAngle.pitch * 2;
 			newAngle.yaw = originalAngle.yaw - m_PunchAngle.yaw * 2;
@@ -56,4 +50,9 @@ angle RCS::getNormal(){
 	ViewAngle.yaw = ViewAngle.yaw + oldAngle.yaw;
 
 	return ViewAngle;
+}
+
+void RCS::reset(){
+	oldAngle.pitch = 0;
+	oldAngle.yaw = 0;
 }

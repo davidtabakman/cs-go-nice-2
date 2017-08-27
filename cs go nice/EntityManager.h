@@ -21,6 +21,7 @@ public:
 	int getEntityHealth(int entityIndex);
 	vec3 getEntityBoneVec(int entityIndex, int boneID);
 	int EntityNum;
+	bool isSpotted(int entityIndex);
 private:
 	
 	DWORD EntityList[32];

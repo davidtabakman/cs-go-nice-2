@@ -20,6 +20,7 @@ public:
 	angle run(angle originalAngle);
 	~RCS();
 	angle getNormal();
+	void reset();
 };
  
 #endif

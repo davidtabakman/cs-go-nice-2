@@ -64,3 +64,7 @@ vec3 EntityManager::getEntityBoneVec(int entityIndex, int boneID){
 bool EntityManager::isDormant(int entityIndex){
 	return Mem.ReadFromMemory<bool>(EntityList[entityIndex] + dwDormant);
 }
+
+bool EntityManager::isSpotted(int entityIndex){
+	return Mem.ReadFromMemory<bool>(EntityList[entityIndex] + m_bSpotted);
+}
