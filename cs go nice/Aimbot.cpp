@@ -181,16 +181,12 @@ void Aimbot::run(EntityManager entityManager){
 			if (newAngle.pitch != 999999999.f){
 				angle testAngle = newAngle;
 				newAngle = rcs.run(newAngle);
-				if (newAngle.pitch < -0.2){
-					std::cout << "wtf";
-				}
-			
 				player.setAng(newAngle);
 			}
 			else {
 				rcs.reset();
 			}
-			//newAngle = rcs.run(newAngle);
+			
 			
 		}
 		Sleep(2);
