@@ -77,6 +77,8 @@ float clampFloat(float var , float min, float max ){
 	return var;
 }
 
+
+
 int closestEntityIndex(EntityManager entityManager){
 	float xDist, yDist, zDist, totalDist, minDist = 10000000.0f;
 	int minIndex = -1;
@@ -96,93 +98,89 @@ int closestEntityIndex(EntityManager entityManager){
 	return minIndex;
 }
 
+angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAngle){
+	me = player.getEyePos();
+	angle lowestAngle, myAngle, betweenAngle;
+	lowestAngle.pitch = 999999999.f;
+	float minDist = 999999999.f, dist;
+	for (int i = 0; i < entityManager.EntityNum; i++){
+		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i)){
+			enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
+
+			myAngle = rcs.getNormal();
+
+			newAngle = CalcAng(me, enemy, 0);
+			betweenAngle;
+			if (myAngle.yaw > 0.0f && newAngle.yaw < 0.0f){
+				betweenAngle = angSub(newAngle, myAngle);
+				if (betweenAngle.yaw < -180.0f){
+					newAngle.yaw += 360.0f;
+					betweenAngle = angSub(newAngle, myAngle);
+					newAngle.yaw -= 360.0f;
+				}
+
+
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
+					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
+				}
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
+					std::cout << "banned";
+
+
+			}
+			else if (newAngle.yaw < 0.0f && myAngle.yaw < 0.0f){
+				newAngle.yaw += 360.0f;
+				myAngle.yaw += 360.0f;
+				betweenAngle = angSub(newAngle, myAngle);
+				myAngle.yaw -= 360.0f;
+				newAngle.yaw -= 360.0f;
+
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
+					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
+				}
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
+					std::cout << "banned";
+
+
+			}
+			else {
+				betweenAngle = angSub(newAngle, myAngle);
+
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
+					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
+				}
+				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
+					std::cout << "banned";
+
+			}
+			dist = sqrtf(betweenAngle.yaw * betweenAngle.yaw + betweenAngle.pitch * betweenAngle.pitch);
+			if (dist < minDist && betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
+				minDist = dist;
+				betweenAngle = angDiv(betweenAngle, soomthener);
+				lowestAngle = angAdd(myAngle, betweenAngle);
+				lowestAngle.pitch = clampFloat(lowestAngle.pitch, -89.0f, 89.0f);
+			}
+		}
+		
+	}
+	return lowestAngle;
+}
+
 void Aimbot::run(EntityManager entityManager){
 	DWORD AngPtr = Mem.ReadFromMemory<DWORD>(Mem.dwEngine + dwClientState);
 	while (true){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.aimbot)){
 			
-			int i = closestEntityIndex(entityManager);
-			if (i != -1){
-				me = player.getEyePos(); enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
-				
-					//angle myAngle = Mem.ReadFromMemory<angle>(AngPtr + dwClientState_ViewAngles);
-					angle myAngle = rcs.getNormal();
+			//int i = closestEntityIndex(entityManager);
+			//if (i != -1){
 
-					newAngle = CalcAng(me, enemy, 0);
-					angle betweenAngle;
-					if (myAngle.yaw > 0.0f && newAngle.yaw < 0.0f){
-						betweenAngle = angSub(newAngle, myAngle);
-						if (betweenAngle.yaw < -180.0f){
-							newAngle.yaw += 360.0f;
-							betweenAngle = angSub(newAngle, myAngle);
-							newAngle.yaw -= 360.0f;
-						}
-						
-
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-							betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-						}
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-							std::cout << "banned";
-
-						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
-							betweenAngle = angDiv(betweenAngle, soomthener);
-							newAngle = angAdd(myAngle, betweenAngle);
-
-							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							newAngle = rcs.run(newAngle);
-							player.setAng(newAngle);
-						}
-					}
-					else if (newAngle.yaw < 0.0f && myAngle.yaw < 0.0f){
-						newAngle.yaw += 360.0f;
-						myAngle.yaw += 360.0f;
-						betweenAngle = angSub(newAngle, myAngle);
-						myAngle.yaw -= 360.0f;
-						newAngle.yaw -= 360.0f;
-
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-							betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-						}
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-							std::cout << "banned";
-
-						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
-							betweenAngle = angDiv(betweenAngle, soomthener);
-							newAngle = angAdd(myAngle, betweenAngle);
-
-							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							
-							
-							newAngle = rcs.run(newAngle);
-						
-							player.setAng(newAngle);
-						}
-					}			
-					else {
-						betweenAngle = angSub(newAngle, myAngle);
-
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-							betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-						}
-						if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-							std::cout << "banned";
-						if (betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
-							betweenAngle = angDiv(betweenAngle, soomthener);
-							newAngle = angAdd(myAngle, betweenAngle);
-
-							newAngle.pitch = clampFloat(newAngle.pitch, -89.0f, 89.0f);
-							newAngle = rcs.run(newAngle);
-							player.setAng(newAngle);
-						}
-					}
-					
-					
-					
-					
-			
-			}
+				newAngle = closestEntityToCrosshair(entityManager, newAngle);
+				if (newAngle.pitch != 999999999.f){
+					newAngle = rcs.run(newAngle);
+					player.setAng(newAngle);
+				}
+			//}
 		}
 		Sleep(2);
 	}

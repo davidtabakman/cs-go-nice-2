@@ -65,7 +65,7 @@ void Triggerbot::run(){
 
 			if (EnemyTeam != player.Team() && EnemyTeam > 1 && EnemyTeam <= 3 && player.CrosshairID() <= 32 && !GetAsyncKeyState(VK_LBUTTON)){
 				if (firstShot){
-					Mem.WriteToMemory<bool>(Mem.dwClient + dwForceAttack, true);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, XBUTTON1, 0);
 					Sleep(10);
 				}
 				firstRelease = true;
@@ -76,7 +76,7 @@ void Triggerbot::run(){
 			else
 			{
 				if (firstRelease){
-					Mem.WriteToMemory<bool>(Mem.dwClient + dwForceAttack, false);
+					mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, XBUTTON1, 0);
 					Sleep(10);
 				}
 				firstShot = true;
