@@ -197,7 +197,7 @@ void Aimbot::run(EntityManager entityManager){
 			else {
 				rcs.reset();
 			}
-			//newAngle = rcs.run(newAngle);
+			
 			
 		}
 		Sleep(2);
