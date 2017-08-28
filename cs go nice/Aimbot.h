@@ -8,6 +8,10 @@
 #include "Local Player.h"
 #include "EntityManager.h"
 #include "RCS.h"
+#include <math.h>
+
+#define PI (3.141592653589793)
+#define D3DXToRadian(degree) ((degree) * (PI / 180.0f))
 
 
 extern LocalPlayer player;
@@ -23,9 +27,9 @@ private:
 	vec3 me;
 	vec3 enemy;
 	angle newAngle;
-	angle closestEntityToCrosshair(EntityManager entityManager, angle newAngle);
-	float soomthener = 5;
-	float fovDeg = 1.5;
+	angle closestEntityToCrosshair(EntityManager entityManager, angle newAngle, int bone);
+	float soomthener = 10;
+	float fovDeg = 10;
 	virtual void setup();
 	virtual angle CalcAng(vec3 me, vec3 enemy, int fFlags);
 };

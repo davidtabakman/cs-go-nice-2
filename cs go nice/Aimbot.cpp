@@ -107,14 +107,15 @@ int closestEntityIndex(EntityManager entityManager){
 	return minIndex;
 }
 
-angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAngle){
+angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAngle, int bone){
 	me = player.getEyePos();
-	angle lowestAngle, myAngle, betweenAngle;
+	angle lowestAngle, myAngle, betweenAngle, distAngAbs;
 	lowestAngle.pitch = 999999999.f;
 	float minDist = 999999999.f, dist, dist2, newFov;
+	
 	for (int i = 0; i < entityManager.EntityNum; i++){
 		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i) && entityManager.isSpotted(i)){
-			enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
+			enemy = entityManager.getEntityBoneVec(i, bone); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
 
 			myAngle = rcs.getNormal();
 
@@ -167,11 +168,18 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 
 			}
 			dist = sqrtf(betweenAngle.yaw * betweenAngle.yaw + betweenAngle.pitch * betweenAngle.pitch);
+			distAngAbs = betweenAngle;
+			distAngAbs.pitch = fabsf(distAngAbs.pitch);
+			distAngAbs.yaw = fabsf(distAngAbs.yaw);
 			dist2 = getDist(entityManager, i);
-			newFov = fovDeg * (500/ dist2);
-			if (dist < minDist && betweenAngle.yaw < newFov && betweenAngle.yaw > -newFov && betweenAngle.pitch < newFov && betweenAngle.pitch > -newFov){
+			float fRealDistanceYaw = sin(D3DXToRadian(distAngAbs.yaw)) * dist2;
+			float fRealDistancePitch = sin(D3DXToRadian(distAngAbs.pitch)) * dist2;
+			if (fRealDistanceYaw < fovDeg && fRealDistancePitch < fovDeg){
 				minDist = dist;
-				betweenAngle = angDiv(betweenAngle, soomthener);
+				if (fRealDistancePitch < fovDeg / 2.5 && fRealDistanceYaw < fovDeg / 2.5)
+					betweenAngle = angDiv(betweenAngle, soomthener);
+				else
+					betweenAngle = angDiv(betweenAngle, soomthener/2);
 				lowestAngle = angAdd(myAngle, betweenAngle);
 				lowestAngle.pitch = clampFloat(lowestAngle.pitch, -89.0f, 89.0f);
 			}
@@ -183,18 +191,29 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 
 void Aimbot::run(EntityManager entityManager){
 	DWORD AngPtr = Mem.ReadFromMemory<DWORD>(Mem.dwEngine + dwClientState);
+	bool firstAim = true;
+	bool firstRelease = false;
+	int bone;
 	while (true){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.aimbot)){
-			
-
-			newAngle = closestEntityToCrosshair(entityManager, newAngle);
+			if (firstAim){
+				bone = rand() % 3 + 6;
+				firstAim = false;
+				firstRelease = true;
+			}
+			newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
 			if (newAngle.pitch != 999999999.f){
-				angle testAngle = newAngle;
-				newAngle = rcs.run(newAngle);
+				int currentWeapon = player.CurrentWeapon();
+				if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
+					newAngle = rcs.run(newAngle);
 				player.setAng(newAngle);
 			}
 			else {
+				if (firstRelease) {
+					firstAim = true;
+					firstRelease = false;
+				}
 				rcs.reset();
 			}
 			
