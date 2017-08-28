@@ -79,6 +79,15 @@ float clampFloat(float var , float min, float max ){
 
 
 
+float getDist(EntityManager entityManager, int i){
+	float xDist, yDist, zDist, totalDist, minDist = 10000000.0f;
+	xDist = entityManager.getEntityX(i) - player.getX();
+	yDist = entityManager.getEntityY(i) - player.getY();
+	zDist = entityManager.getEntityZ(i) - player.getZ();
+	totalDist = sqrtf(xDist * xDist + yDist * yDist + zDist * zDist);
+	return totalDist;
+}
+
 int closestEntityIndex(EntityManager entityManager){
 	float xDist, yDist, zDist, totalDist, minDist = 10000000.0f;
 	int minIndex = -1;
@@ -102,7 +111,7 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 	me = player.getEyePos();
 	angle lowestAngle, myAngle, betweenAngle;
 	lowestAngle.pitch = 999999999.f;
-	float minDist = 999999999.f, dist;
+	float minDist = 999999999.f, dist, dist2, newFov;
 	for (int i = 0; i < entityManager.EntityNum; i++){
 		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i) && entityManager.isSpotted(i)){
 			enemy = entityManager.getEntityBoneVec(i, 8); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
@@ -158,7 +167,9 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 
 			}
 			dist = sqrtf(betweenAngle.yaw * betweenAngle.yaw + betweenAngle.pitch * betweenAngle.pitch);
-			if (dist < minDist && betweenAngle.yaw < fovDeg && betweenAngle.yaw > -fovDeg && betweenAngle.pitch < fovDeg && betweenAngle.pitch > -fovDeg){
+			dist2 = getDist(entityManager, i);
+			newFov = fovDeg * (500/ dist2);
+			if (dist < minDist && betweenAngle.yaw < newFov && betweenAngle.yaw > -newFov && betweenAngle.pitch < newFov && betweenAngle.pitch > -newFov){
 				minDist = dist;
 				betweenAngle = angDiv(betweenAngle, soomthener);
 				lowestAngle = angAdd(myAngle, betweenAngle);
@@ -181,10 +192,6 @@ void Aimbot::run(EntityManager entityManager){
 			if (newAngle.pitch != 999999999.f){
 				angle testAngle = newAngle;
 				newAngle = rcs.run(newAngle);
-				if (newAngle.pitch < -0.2){
-					std::cout << "wtf";
-				}
-			
 				player.setAng(newAngle);
 			}
 			else {
