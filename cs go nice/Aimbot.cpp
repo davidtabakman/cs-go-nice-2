@@ -115,7 +115,8 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 	
 	for (int i = 0; i < entityManager.EntityNum; i++){
 		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i) && entityManager.isSpotted(i)){
-			enemy = entityManager.getEntityBoneVec(i, bone); newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
+			enemy = entityManager.getEntityBoneVec(i, bone);
+			newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
 
 			myAngle = rcs.getNormal();
 
@@ -178,8 +179,10 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 				minDist = dist;
 				if (fRealDistancePitch < fovDeg / 2.5 && fRealDistanceYaw < fovDeg / 2.5)
 					betweenAngle = angDiv(betweenAngle, soomthener);
+				else if (fRealDistancePitch < fovDeg / 1.5 && fRealDistanceYaw < fovDeg / 1.5)
+					betweenAngle = angDiv(betweenAngle, soomthener/1.5);
 				else
-					betweenAngle = angDiv(betweenAngle, soomthener/2);
+					betweenAngle = angDiv(betweenAngle, soomthener / 2.5);
 				lowestAngle = angAdd(myAngle, betweenAngle);
 				lowestAngle.pitch = clampFloat(lowestAngle.pitch, -89.0f, 89.0f);
 			}
@@ -194,17 +197,21 @@ void Aimbot::run(EntityManager entityManager){
 	bool firstAim = true;
 	bool firstRelease = false;
 	int bone;
+	std::srand(time(NULL));
 	while (true){
 		//Check if toggled
 		if (GetAsyncKeyState(keyBinds.aimbot)){
+			int currentWeapon = player.CurrentWeapon();
 			if (firstAim){
 				bone = rand() % 3 + 6;
+				if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
+					bone = 8;
 				firstAim = false;
 				firstRelease = true;
 			}
 			newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
 			if (newAngle.pitch != 999999999.f){
-				int currentWeapon = player.CurrentWeapon();
+				
 				if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
 					newAngle = rcs.run(newAngle);
 				player.setAng(newAngle);

@@ -2,7 +2,7 @@
 #define CONTROL_H
 
 #include <windows.h>
-#include <time.h>
+#include <ctime>
 
 typedef struct vec3{ float x; float y; float z; };
 typedef struct angle{ float pitch; float yaw; float row; };
@@ -13,7 +13,7 @@ struct KeyBinds{
 	int glow = VK_INSERT;
 	int bunnyhop = VK_DELETE;
 	int noflash = VK_F6;
-	int aimbot = VK_RBUTTON;
+	int aimbot = VK_LBUTTON;
 }; static KeyBinds keyBinds;
 
 struct cheats{
