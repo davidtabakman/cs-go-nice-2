@@ -29,7 +29,7 @@ private:
 	angle newAngle;
 	angle closestEntityToCrosshair(EntityManager entityManager, angle newAngle, int bone);
 	float soomthener = 15;
-	float fovDeg = 20;
+	float fovDeg = 15;
 	virtual void setup();
 	virtual angle CalcAng(vec3 me, vec3 enemy, int fFlags);
 };
