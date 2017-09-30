@@ -1,4 +1,4 @@
-﻿Build started 31-Aug-17 19:55:54.
+﻿Build started 30-Sep-17 17:38:53.
      1>Project "D:\Documents\GitHub\cs-go-nice\cs go nice\cs go nice.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Aimbot.cpp Main.cpp
@@ -10,7 +10,7 @@
      1>d:\documents\github\cs-go-nice\cs go nice\aimbot.cpp(183): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
      1>d:\documents\github\cs-go-nice\cs go nice\aimbot.cpp(185): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
      1>d:\documents\github\cs-go-nice\cs go nice\aimbot.cpp(114): warning C4101: 'newFov' : unreferenced local variable
-     1>d:\documents\github\cs-go-nice\cs go nice\aimbot.cpp(200): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>d:\documents\github\cs-go-nice\cs go nice\aimbot.cpp(201): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
          Generating Code...
          Compiling...
          Main.cpp
@@ -30,9 +30,10 @@
          "Debug\Process Control.obj"
          Debug\RCS.obj
          Debug\Triggerbot.obj
+         LINK : D:\Documents\GitHub\cs-go-nice\Debug\cs go nice.exe not found or not built by the last incremental link; performing full link
          cs go nice.vcxproj -> D:\Documents\GitHub\cs-go-nice\Debug\cs go nice.exe
      1>Done Building Project "D:\Documents\GitHub\cs-go-nice\cs go nice\cs go nice.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:02.06
+Time Elapsed 00:00:03.69

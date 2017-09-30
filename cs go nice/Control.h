@@ -13,7 +13,9 @@ struct KeyBinds{
 	int glow = VK_INSERT;
 	int bunnyhop = VK_DELETE;
 	int noflash = VK_F6;
-	int aimbot = VK_LBUTTON;
+	int aimbotToggle = VK_RBUTTON;
+	int aimbotKey = VK_LBUTTON;
+	int aimbotNextMode = VK_F7;
 }; static KeyBinds keyBinds;
 
 struct cheats{

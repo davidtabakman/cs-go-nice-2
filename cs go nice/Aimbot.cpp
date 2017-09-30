@@ -197,34 +197,78 @@ void Aimbot::run(EntityManager entityManager){
 	bool firstAim = true;
 	bool firstRelease = false;
 	int bone;
+	mode = 2;
 	std::srand(time(NULL));
 	while (true){
 		//Check if toggled
-		if (GetAsyncKeyState(keyBinds.aimbot)){
-			int currentWeapon = player.CurrentWeapon();
-			if (firstAim){
-				bone = rand() % 3 + 6;
-				if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
-					bone = 8;
-				firstAim = false;
-				firstRelease = true;
-			}
-			newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
-			if (newAngle.pitch != 999999999.f){
-				
-				if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
-					newAngle = rcs.run(newAngle);
-				player.setAng(newAngle);
-			}
-			else {
-				if (firstRelease) {
-					firstAim = true;
-					firstRelease = false;
+		if (GetAsyncKeyState(keyBinds.aimbotNextMode)){
+			if (mode == 2)
+				mode = 0;
+			else if (mode == 0)
+				mode = 1;
+			else
+				mode = 2;
+			std::cout << "Current mode: " << mode << std::endl;
+			Sleep(100);
+		}
+		if (mode == 1){
+			if (GetAsyncKeyState(keyBinds.aimbotKey)){
+				int currentWeapon = player.CurrentWeapon();
+				if (firstAim){
+					bone = rand() % 3 + 6;
+					if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
+						bone = 8;
+					firstAim = false;
+					firstRelease = true;
 				}
-				rcs.reset();
+				newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
+				if (newAngle.pitch != 999999999.f){
+
+					if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
+						newAngle = rcs.run(newAngle);
+					player.setAng(newAngle);
+				}
+				else {
+					if (firstRelease) {
+						firstAim = true;
+						firstRelease = false;
+					}
+					rcs.reset();
+				}
+
+
 			}
-			
-			
+		}
+		else if (mode == 2){
+			if (GetAsyncKeyState(keyBinds.aimbotToggle)){
+				Cheats.aimbot = !Cheats.aimbot;
+				std::cout << "Aimbot is " << Cheats.aimbot;
+				Sleep(100);
+			}
+			if (Cheats.aimbot){
+				int currentWeapon = player.CurrentWeapon();
+				if (firstAim){
+					bone = rand() % 3 + 6;
+					if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
+						bone = 8;
+					firstAim = false;
+					firstRelease = true;
+				}
+				newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
+				if (newAngle.pitch != 999999999.f){
+
+					if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
+						newAngle = rcs.run(newAngle);
+					player.setAng(newAngle);
+				}
+				else {
+					if (firstRelease) {
+						firstAim = true;
+						firstRelease = false;
+					}
+					rcs.reset();
+				}
+			}
 		}
 		Sleep(2);
 	}
