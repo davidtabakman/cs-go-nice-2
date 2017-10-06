@@ -116,58 +116,15 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 	for (int i = 0; i < entityManager.EntityNum; i++){
 		if (entityManager.getEntityHealth(i) > 0 && !entityManager.isDormant(i) && entityManager.isSpotted(i)){
 			enemy = entityManager.getEntityBoneVec(i, bone);
-			newAngle.pitch = 0; newAngle.yaw = 0; newAngle.row = 0;
-
 			myAngle = rcs.getNormal();
-
-			if (player.getShotsFired() >= 3){
-				std::cout << "";
-			}
-
 			newAngle = CalcAng(me, enemy, 0);
-			betweenAngle;
-			if (myAngle.yaw > 0.0f && newAngle.yaw < 0.0f){
-				betweenAngle = angSub(newAngle, myAngle);
-				if (betweenAngle.yaw < -180.0f){
-					newAngle.yaw += 360.0f;
-					betweenAngle = angSub(newAngle, myAngle);
-					newAngle.yaw -= 360.0f;
-				}
+			newAngle.normalize();
 
 
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-				}
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-					std::cout << "banned";
 
-
-			}
-			else if (newAngle.yaw < 0.0f && myAngle.yaw < 0.0f){
-				newAngle.yaw += 360.0f;
-				myAngle.yaw += 360.0f;
-				betweenAngle = angSub(newAngle, myAngle);
-				myAngle.yaw -= 360.0f;
-				newAngle.yaw -= 360.0f;
-
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-				}
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-					std::cout << "banned";
-
-
-			}
-			else {
-				betweenAngle = angSub(newAngle, myAngle);
-
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f){
-					betweenAngle.yaw = (360 - betweenAngle.yaw)*-1;
-				}
-				if (betweenAngle.yaw > 180.0f || betweenAngle.yaw <= -180.0f)
-					std::cout << "banned";
-
-			}
+			betweenAngle = angSub(newAngle, myAngle);
+			betweenAngle.normalize();
+				
 			dist = sqrtf(betweenAngle.yaw * betweenAngle.yaw + betweenAngle.pitch * betweenAngle.pitch);
 			distAngAbs = betweenAngle;
 			distAngAbs.pitch = fabsf(distAngAbs.pitch);
@@ -194,10 +151,8 @@ angle Aimbot::closestEntityToCrosshair(EntityManager entityManager, angle newAng
 
 void Aimbot::run(EntityManager entityManager){
 	DWORD AngPtr = Mem.ReadFromMemory<DWORD>(Mem.dwEngine + dwClientState);
-	bool firstAim = true;
-	bool firstRelease = false;
-	int bone;
-	mode = 2;
+	firstAim = true;
+	firstRelease = false;
 	std::srand(time(NULL));
 	while (true){
 		//Check if toggled
@@ -213,63 +168,45 @@ void Aimbot::run(EntityManager entityManager){
 		}
 		if (mode == 1){
 			if (GetAsyncKeyState(keyBinds.aimbotKey)){
-				int currentWeapon = player.CurrentWeapon();
-				if (firstAim){
-					bone = rand() % 3 + 6;
-					if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
-						bone = 8;
-					firstAim = false;
-					firstRelease = true;
-				}
-				newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
-				if (newAngle.pitch != 999999999.f){
-
-					if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
-						newAngle = rcs.run(newAngle);
-					player.setAng(newAngle);
-				}
-				else {
-					if (firstRelease) {
-						firstAim = true;
-						firstRelease = false;
-					}
-					rcs.reset();
-				}
-
-
+				aim(entityManager);
 			}
 		}
 		else if (mode == 2){
 			if (GetAsyncKeyState(keyBinds.aimbotToggle)){
 				Cheats.aimbot = !Cheats.aimbot;
-				std::cout << "Aimbot is " << Cheats.aimbot;
+				std::cout << "Aimbot is " << Cheats.aimbot << std::endl;
 				Sleep(100);
 			}
 			if (Cheats.aimbot){
-				int currentWeapon = player.CurrentWeapon();
-				if (firstAim){
-					bone = rand() % 3 + 6;
-					if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
-						bone = 8;
-					firstAim = false;
-					firstRelease = true;
-				}
-				newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
-				if (newAngle.pitch != 999999999.f){
-
-					if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
-						newAngle = rcs.run(newAngle);
-					player.setAng(newAngle);
-				}
-				else {
-					if (firstRelease) {
-						firstAim = true;
-						firstRelease = false;
-					}
-					rcs.reset();
-				}
+				aim(entityManager);
 			}
 		}
 		Sleep(2);
+	}
+}
+
+void Aimbot::aim(EntityManager entityManager){
+	
+	int currentWeapon = player.CurrentWeapon();
+	if (firstAim){
+		bone = rand() % 3 + 6;
+		if (currentWeapon == WEAPON_SG556 || currentWeapon == WEAPON_DEAGLE)
+			bone = 8;
+		firstAim = false;
+		firstRelease = true;
+	}
+	newAngle = closestEntityToCrosshair(entityManager, newAngle, bone);
+	if (newAngle.pitch != 999999999.f){
+
+		if (currentWeapon != WEAPON_USP_SILENCER && currentWeapon != WEAPON_DEAGLE && currentWeapon != WEAPON_FIVESEVEN && currentWeapon != WEAPON_GLOCK && currentWeapon != WEAPON_P250)
+			newAngle = rcs.run(newAngle);
+		player.setAng(newAngle);
+	}
+	else {
+		if (firstRelease) {
+			firstAim = true;
+			firstRelease = false;
+		}
+		rcs.reset();
 	}
 }

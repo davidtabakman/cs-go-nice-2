@@ -3,9 +3,62 @@
 
 #include <windows.h>
 #include <ctime>
+#include <iostream>
+
 
 typedef struct vec3{ float x; float y; float z; };
-typedef struct angle{ float pitch; float yaw; float row; };
+typedef struct angle{
+	void normalize() {
+		if (pitch > 89.0f) pitch = 89.0f;
+		if (pitch < -89.0f) pitch = -89.0f;
+
+		while (yaw > 180.0f) yaw -= 360.0f;
+		while (yaw <= -180.0f) yaw += 360.0f;
+
+		if (yaw > 180.0f) yaw = 180.0f;
+		if (yaw < -180.0f) yaw = -180.0f;
+
+		row = 0.0f;
+	}
+
+	angle(){
+
+	}
+
+	angle(float Pitch, float Yaw, float Row){
+		pitch = Pitch; yaw = Yaw; row = Row;
+	}
+	angle operator + (angle Angle){
+		return angle(pitch + Angle.pitch, yaw + Angle.yaw, row + Angle.row);
+	}
+
+	angle operator - (angle Angle){
+		return angle(pitch - Angle.pitch, yaw - Angle.yaw, row - Angle.row);
+	}
+
+	angle operator * (float mult) {
+		return angle(pitch * mult, yaw * mult, row * mult);
+	}
+
+	bool operator == (angle Angle){
+		return pitch == Angle.pitch && yaw == Angle.yaw && row == Angle.row;
+	}
+
+	bool operator != (angle Angle) {
+		return !(Angle == *this);
+	}
+
+	angle operator / (float div) {
+		return angle(pitch / div, yaw / div, row / div);
+	}
+
+	void print() {
+		std::cout << "X - " << pitch << ", Y - " << yaw << ", Z - " << row << std::endl;
+	}
+
+	
+	float pitch; float yaw; float row; 
+};
 
 struct KeyBinds{
 	int quit = VK_END;

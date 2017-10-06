@@ -41,6 +41,7 @@ angle RCS::run(angle originalAngle){
 	return originalAngle;
 }
 
+
 angle RCS::getNormal(){
 	angle ViewAngle = player.getAng();
 

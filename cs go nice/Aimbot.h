@@ -30,7 +30,8 @@ public:
 	virtual void run(EntityManager entityManager);
 	~Aimbot();
 private:
-	int mode;
+	bool firstAim, firstRelease;
+	int mode, bone;
 	vec3 me;
 	vec3 enemy;
 	angle newAngle;
@@ -39,6 +40,7 @@ private:
 	float fovDeg = 20;
 	virtual void setup();
 	virtual angle CalcAng(vec3 me, vec3 enemy, int fFlags);
+	virtual void aim(EntityManager entityManager);
 };
 
 #endif /* AIMBOT_H */

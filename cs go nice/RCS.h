@@ -16,7 +16,7 @@ protected:
 	int shotsFired = 0;
 public:
 	RCS();
-	angle oldAngle;
+	angle oldAngle, vecLastPunch;
 	angle run(angle originalAngle);
 	~RCS();
 	angle getNormal();
